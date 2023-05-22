@@ -1,6 +1,6 @@
 THIS IS SIMPLE API SERVICE FOR TCP SMARTWATCH PROJECT
 
-DOMAIN : <https://api-watch.adcm.co.th/v1/>
+DOMAIN : <https://api-watch.adcm.co.th/>
 
 ---
 
