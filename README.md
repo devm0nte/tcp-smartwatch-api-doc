@@ -865,7 +865,7 @@ Body:
 
 ## Watch Heart Rate Command API
 
-This API allows you to send a command to a smartwatch to check the heart rate.
+This API allows you to send a command to a smartwatch to check the heart rate. The data will send to Database within 1 minute after send command (if wearing smartwatch)
 
 ### API Endpoint
 
