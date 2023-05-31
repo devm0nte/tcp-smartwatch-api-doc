@@ -1,6 +1,6 @@
 THIS IS SIMPLE API SERVICE FOR TCP SMARTWATCH PROJECT
 
-DOMAIN : <https://api-watch.adcm.co.th/>
+DOMAIN : <https://api-watch.adcm.co.th/v1/>
 
 ---
 
@@ -9,9 +9,89 @@ DOMAIN : <https://api-watch.adcm.co.th/>
 ---
 # API Documentation
 
+Sure! Here's the continuation of the document with the added table of contents:
+
 ---
 
-## IMEI_NUMBER FOR TEST : 865513041161826
+Table of Contents:
+
+- [Project Tcp Smartwatch](#project-tcp-smartwatch)
+- [API Documentation](#api-documentation)
+  - [Watch List API](#watch-list-api)
+    - [API Endpoint](#api-endpoint)
+    - [Response](#response)
+      - [Watch Fields](#watch-fields)
+    - [Example Request](#example-request)
+    - [Example Response](#example-response)
+  - [Smart Watch Details API](#smart-watch-details-api)
+    - [API Endpoint](#api-endpoint-1)
+    - [Parameters](#parameters)
+    - [Response](#response-1)
+      - [Data Fields](#data-fields)
+    - [Example Request](#example-request-1)
+    - [Example Response](#example-response-1)
+  - [Health List API](#health-list-api)
+    - [API Endpoint](#api-endpoint-2)
+    - [Response](#response-2)
+      - [Health Record Fields](#health-record-fields)
+    - [Example Request](#example-request-2)
+    - [Example Response](#example-response-2)
+  - [Health List by IMEI API](#health-list-by-imei-api)
+    - [API Endpoint](#api-endpoint-3)
+    - [Path Parameters](#path-parameters)
+    - [Response](#response-3)
+      - [Health Record Fields](#health-record-fields-1)
+    - [Example Request](#example-request-3)
+    - [Example Response](#example-response-3)
+  - [Health History by IMEI API](#health-history-by-imei-api)
+    - [API Endpoint](#api-endpoint-4)
+    - [Path Parameters](#path-parameters-1)
+    - [Query Parameters](#query-parameters)
+    - [Response](#response-4)
+      - [Health Record Fields](#health-record-fields-2)
+    - [Example Request](#example-request-4)
+    - [Example Response](#example-response-4)
+  - [Emergency Log API](#emergency-log-api)
+    - [API Endpoint](#api-endpoint-5)
+      - [Get All Emergency Logs](#get-all-emergency-logs)
+      - [Get Emergency Logs by IMEI](#get-emergency-logs-by-imei)
+      - [Get Emergency SOS Logs](#get-emergency-sos-logs)
+      - [Get Emergency Warning Logs](#get-emergency-warning-logs)
+    - [Query Parameters](#query-parameters-1)
+    - [Response](#response-5)
+      - [Emergency Log Fields](#emergency-log-fields)
+        - [Payload Fields](#payload-fields)
+    - [Example Requests](#example-requests)
+      - [Get All Emergency Logs](#get-all-emergency-logs-1)
+      - [Get Emergency Logs by IMEI](#get-emergency-logs-by-imei-1)
+    - [Example Response](#example-response-5)
+  - [Watch Interval Command API](#watch-interval-command-api)
+    - [API Endpoint](#api-endpoint-6)
+      - [Set Interval for Health Data Collection](#set-interval-for-health-data-collection)
+    - [Request Body](#request-body)
+    - [Response](#response-6)
+    - [Example Request](#example-request-5)
+      - [Set Interval for Health Data Collection](#set-interval-for-health-data-collection-1)
+    - [Example Response](#example-response-6)
+  - [Watch Temperature Command API](#watch-temperature-command-api)
+    - [API Endpoint](#api-endpoint-7)
+      - [Send Temperature Check Command](#send-temperature-check-command)
+    - [Request Body](#request-body-1)
+    - [Response](#response-7)
+    - [Example Request](#example-request-6)
+      - [Send Temperature Check Command](#send-temperature-check-command-1)
+    - [Example Response](#example-response-7)
+  - [Watch Heart Rate Command API](#watch-heart-rate-command-api)
+    - [API Endpoint](#api-endpoint-8)
+      - [Send Heart Rate Check Command](#send-heart-rate-check-command)
+    - [Request Body](#request-body-2)
+    - [Response](#response-8)
+    - [Example Request](#example-request-7)
+      - [Send Heart Rate Check Command](#send-heart-rate-check-command-1)
+    - [Example Response](#example-response-8)
+  - [License](#license)
+
+---
 
 ## Watch List API
 
@@ -486,6 +566,354 @@ GET https://api-watch.adcm.co.th/v1/health/imei/865513041161826/history?date=202
 ```
 
 ---
+
+
+## Emergency Log API
+
+This API provides access to emergency log data.
+
+### API Endpoint
+
+#### Get All Emergency Logs
+
+This endpoint access to all emergency log data.
+
+```
+GET https://api-watch.adcm.co.th/v1/emergency
+```
+
+#### Get Emergency Logs by IMEI
+
+This endpoint access to all emergency log data. query by imei number
+
+```
+GET https://api-watch.adcm.co.th/v1/emergency?imei={imei}
+```
+
+#### Get Emergency SOS Logs
+
+This endpoint access to emergency log data. in SOS state only
+
+```
+GET https://api-watch.adcm.co.th/v1/emergency/sos
+```
+
+#### Get Emergency Warning Logs
+
+This endpoint access to emergency log data. in non sos state
+
+```
+GET https://api-watch.adcm.co.th/v1/emergency/warning
+```
+
+### Query Parameters
+
+- `imei` (string): The IMEI (International Mobile Equipment Identity) number of the smartwatch. (Optional)
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "success".
+- `status` (integer): The HTTP status code of the response. Possible values: 200.
+- `message` (string): A message describing the response.
+- `pagination` (object): Pagination information.
+  - `all_rows` (integer): The total number of emergency logs.
+  - `all_pages` (integer): The total number of pages.
+  - `page_limit` (integer): The maximum number of logs per page.
+  - `page_number` (integer): The current page number.
+- `length` (integer): The number of emergency logs in the current response.
+- `data` (array): An array containing the emergency log records.
+
+#### Emergency Log Fields
+
+Each emergency log object in the `data` array contains the following fields:
+
+- `id` (integer): The ID of the emergency log.
+- `datetime` (string): The timestamp of the emergency log.
+- `smart_watch_id` (integer): The ID of the associated smartwatch.
+- `location` (object): The location information. It may be null if the location is unavailable.
+- `alarm_state` (string): The state of the alarm.
+- `battery_level` (string): The battery level.
+- `payload` (object): Additional payload data.
+- `metadata` (object): Additional metadata. It may be null.
+
+##### Payload Fields
+
+The `payload` object contains various fields specific to the emergency log. The structure and fields may vary depending on the log's data.
+
+### Example Requests
+
+#### Get All Emergency Logs
+
+```
+GET https://api-watch.adcm.co.th/v1/emergency
+```
+
+#### Get Emergency Logs by IMEI
+
+```
+GET https://api-watch.adcm.co.th/v1/emergency?imei={imei}
+```
+
+### Example Response
+
+```json
+{
+  "type": "success",
+  "status": 200,
+  "message": "All Emergency log list",
+  "pagination": {
+    "all_rows": 2,
+    "all_pages": 1,
+    "page_limit": 10,
+    "page_number": 1
+  },
+  "length": 2,
+  "data": [
+    {
+      "id": 3,
+      "datetime": "2023-05-31T16:58:57.456Z",
+      "smart_watch_id": 1,
+      "location": null,
+      "alarm_state": "03",
+      "battery_level": "049",
+      "payload": {
+        "date": "2031-05-23",
+        "gmtTime": "235855",
+        "lbsData": "0000.0000N00000.0000E000.1",
+        "gsmSignal": "080",
+        "alarmState": "03",
+        "identifier": "IW",
+        "satellites": "000",
+        "commandWord": "AP10",
+        "lbsBaseData": {
+          "cid": "42293617",
+          "lac": "16664",
+          "mcc": "520",
+          "mnc": "3"
+        },
+        "workingMode": "01",
+        "batteryLevel": "049",
+        "dataValidity": "V",
+        "replyAddress": "0",
+        "deviceLanguage": "zh-cn",
+        "directionAngle": "323.87",
+        "remainingSpace": "0",
+        "mobileHyperlink": "0",
+        "wifiInformation": [
+          {
+            "ssid": "a",
+            "macAddress": "9c-6f-52-f2-4e-be",
+            "signalStrength": "111"
+          }
+        ],
+        "fortificationState": "00"
+      },
+      "metadata": null
+    },
+    {
+      "id": 2,
+      "datetime": "2023-05-31T16:53:57.303Z",
+      "smart_watch_id": 1,
+      "location": null,
+      "alarm_state": "03",
+      "battery_level": "049",
+      "payload": {
+        "date": "2031-05-23",
+        "gmtTime": "235355",
+        "lbsData": "0000.0000N00000.0000E000.1",
+        "gsmSignal": "080",
+        "alarmState": "03",
+        "identifier": "IW",
+        "satellites": "000",
+        "commandWord": "AP10",
+        "lbsBaseData": {
+          "cid": "42293617",
+          "lac": "16664",
+          "mcc": "520",
+          "mnc": "3"
+        },
+        "workingMode": "01",
+        "batteryLevel": "049",
+        "dataValidity": "V",
+        "replyAddress": "0",
+        "deviceLanguage": "zh-cn",
+        "directionAngle": "323.87",
+        "remainingSpace": "0",
+        "mobileHyperlink": "0",
+        "wifiInformation": [
+          {
+            "ssid": "a",
+            "macAddress": "9c-6f-52-f2-4e-be",
+            "signalStrength": "105"
+          }
+        ],
+        "fortificationState": "00"
+      },
+      "metadata": null
+    }
+  ]
+}
+```
+
+---
+
+## Watch Interval Command API
+
+This API allows you to set the interval for health data collection on a smartwatch. The health data will be send from smartwatch every interval minute (device minimum 2 minute)
+
+### API Endpoint
+
+#### Set Interval for Health Data Collection
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/interval
+```
+
+### Request Body
+
+The request body should be in JSON format and should contain the following fields:
+
+- `imei_number` (string): The IMEI (International Mobile Equipment Identity) number of the smartwatch.
+- `interval_minute` (integer): The interval in minutes for health data collection.
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "created".
+- `status` (integer): The HTTP status code of the response. Possible values: 201.
+- `message` (string): A message describing the response.
+
+### Example Request
+
+#### Set Interval for Health Data Collection
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/interval
+
+Body:
+{
+  "imei_number": "865513041161826",
+  "interval_minute": 10
+}
+```
+
+### Example Response
+
+```json
+{
+  "type": "created",
+  "status": 201,
+  "message": "Command to set interval health : 865513041161826 every 10 minute"
+}
+```
+
+---
+
+## Watch Temperature Command API
+
+This API allows you to send a command to a smartwatch to check the temperature. The data will send to Database within 1 minute after send command (if wearing smartwatch)
+
+### API Endpoint
+
+#### Send Temperature Check Command
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/temperature
+```
+
+### Request Body
+
+The request body should be in JSON format and should contain the following field:
+
+- `imei_number` (string): The IMEI (International Mobile Equipment Identity) number of the smartwatch.
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "created".
+- `status` (integer): The HTTP status code of the response. Possible values: 201.
+- `message` (string): A message describing the response.
+
+### Example Request
+
+#### Send Temperature Check Command
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/temperature
+
+Body:
+{
+  "imei_number": "865513041161826"
+}
+```
+
+### Example Response
+
+```json
+{
+  "type": "created",
+  "status": 201,
+  "message": "Sent Command to check temperature : 865513041161826"
+}
+```
+
+---
+
+## Watch Heart Rate Command API
+
+This API allows you to send a command to a smartwatch to check the heart rate.
+
+### API Endpoint
+
+#### Send Heart Rate Check Command
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/heartrate
+```
+
+### Request Body
+
+The request body should be in JSON format and should contain the following field:
+
+- `imei_number` (string): The IMEI (International Mobile Equipment Identity) number of the smartwatch.
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "created".
+- `status` (integer): The HTTP status code of the response. Possible values: 201.
+- `message` (string): A message describing the response.
+
+### Example Request
+
+#### Send Heart Rate Check Command
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/heartrate
+
+Body:
+{
+  "imei_number": "865513041161826"
+}
+```
+
+### Example Response
+
+```json
+{
+  "type": "created",
+  "status": 201,
+  "message": "Sent Command to check heartrate : 865513041161826"
+}
+```
+
+---
+
 
 ## License
 
