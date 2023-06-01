@@ -9,8 +9,6 @@ DOMAIN : <https://api-watch.adcm.co.th/v1/>
 ---
 # API Documentation
 
-Sure! Here's the continuation of the document with the added table of contents:
-
 ---
 
 Table of Contents:
@@ -633,7 +631,7 @@ Each emergency log object in the `data` array contains the following fields:
 - `datetime` (string): The timestamp of the emergency log.
 - `smart_watch_id` (integer): The ID of the associated smartwatch.
 - `location` (object): The location information. It may be null if the location is unavailable.
-- `alarm_state` (string): The state of the alarm.
+- `alarm_state` (string): The state of the alarm.- `alarm_state` [00: no alarm, 01：SOS, 03: not wear, 05/06：fall down alarm]
 - `battery_level` (string): The battery level.
 - `payload` (object): Additional payload data.
 - `metadata` (object): Additional metadata. It may be null.
