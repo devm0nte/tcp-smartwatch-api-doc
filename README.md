@@ -2,6 +2,8 @@ THIS IS SIMPLE API SERVICE FOR TCP SMARTWATCH PROJECT
 
 DOMAIN : <https://api-watch.adcm.co.th/v1/>
 
+SOCKETIO Path : `server_url` : <https://io-watch.adcm.co.th/io> using socket.io-client v4 ++
+
 ---
 
 # Project Tcp Smartwatch
@@ -87,6 +89,17 @@ Table of Contents:
     - [Example Request](#example-request-7)
       - [Send Heart Rate Check Command](#send-heart-rate-check-command-1)
     - [Example Response](#example-response-8)
+  - [Socket.IO Client API Documentation](#socketio-client-api-documentation)
+    - [Connect to Server](#connect-to-server)
+    - [Events and Data Formats](#events-and-data-formats)
+      - [Event: `notification`](#event-notification)
+      - [Event: `feed/location`](#event-feedlocation)
+      - [Event: `feed/location/{imei}`](#event-feedlocationimei)
+      - [Event: `feed/health`](#event-feedhealth)
+      - [Event: `feed/health/{imei}`](#event-feedhealthimei)
+      - [Event: `feed/alarm`](#event-feedalarm)
+      - [Event: `feed/alarm/{imei}`](#event-feedalarmimei)
+    - [Disconnect from Server](#disconnect-from-server)
   - [License](#license)
 
 ---
@@ -911,6 +924,276 @@ Body:
 ```
 
 ---
+
+## Socket.IO Client API Documentation
+
+The Socket.IO client provides real-time communication with the server using various events. You can use these events to receive different types of data from watches.
+
+`server_url` : <https://io-watch.adcm.co.th/io> using socket.io-client v4 ++
+
+### Connect to Server
+
+To connect to the Socket.IO server, use the following code:
+
+```javascript
+const socket = io('server_url');
+```
+
+Replace `'server_url'` with the actual URL of your Socket.IO server.
+
+### Events and Data Formats
+
+- `notification` for receive data when watch trigger alarm
+- `feed/location` for receive location data from any watch
+- `feed/location/{imei}`for receive location data from the watch specific by imei
+- `feed/health` for receive health data from any watch
+- `feed/health/{imei}` for receive health data from the watch specific by imei
+- `feed/alarm` for receive alarm or emergency data from any watch
+- `feed/alarm/{imei}` for receive alarm or emergency data from the watch specific by imei
+
+#### Event: `notification`
+
+Receive data when a watch triggers an alarm.
+
+Example response:
+```json
+{
+  "imei": "865513041161826",
+  "alarm_state": "01"
+}
+```
+
+```javascript
+socket.on('notification', (data) => {
+  // Handle notification data
+});
+```
+
+#### Event: `feed/location`
+
+Receive location data from any watch.
+
+Example response:
+```json
+{
+  "current": {
+    "location": null, // If location is unavailable
+    "datetime": "2023-08-07T05:13:26.921Z"
+  },
+  "last": {
+    "location": {
+      "latitude": 16.739791666666665,
+      "longitude": 100.19438166666667
+    },
+    "datetime": "2023-08-07T04:02:37.639Z"
+  },
+  "imei": "865513041161826"
+}
+```
+
+```javascript
+socket.on('feed/location', (data) => {
+  // Handle location data
+});
+```
+
+#### Event: `feed/location/{imei}`
+
+Receive location data from a specific watch identified by its IMEI.
+
+Example response:
+```json
+{
+  "current": {
+    "location": null, // If location is unavailable
+    "datetime": "2023-08-07T05:13:26.921Z"
+  },
+  "last": {
+    "location": {
+      "latitude": 16.739791666666665,
+      "longitude": 100.19438166666667
+    },
+    "datetime": "2023-08-07T04:02:37.639Z"
+  },
+  "imei": "865513041161826"
+}
+```
+
+```javascript
+socket.on('feed/location/{imei}', (data) => {
+  // Handle location data for the specified IMEI
+});
+```
+
+#### Event: `feed/health`
+
+Receive health data from any watch.
+
+Example response:
+```json
+{
+  "datetime": "2023-08-07T05:15:29.863Z",
+  "heart_rate": "96",
+  "sbp": "125",
+  "dbp": "76",
+  "spo2": "97",
+  "bs": "0.0",
+  "temperature": "36.7",
+  "smart_watch_id": 1,
+  "imei": "865513041161826"
+}
+```
+
+```javascript
+socket.on('feed/health', (data) => {
+  // Handle health data
+});
+```
+
+#### Event: `feed/health/{imei}`
+
+Receive health data from a specific watch identified by its IMEI.
+
+Example response:
+```json
+{
+  "datetime": "2023-08-07T05:15:29.863Z",
+  "heart_rate": "96",
+  "sbp": "125",
+  "dbp": "76",
+  "spo2": "97",
+  "bs": "0.0",
+  "temperature": "36.7",
+  "smart_watch_id": 1,
+  "imei": "865513041161826"
+}
+```
+
+```javascript
+socket.on('feed/health/{imei}', (data) => {
+  // Handle health data for the specified IMEI
+});
+```
+
+#### Event: `feed/alarm`
+
+Receive alarm or emergency data from any watch.
+
+Example response:
+```json
+{
+  "datetime": "2023-08-07T05:27:29.896Z",
+  "location": {
+    "latitude": 16.739801666666665,
+    "longitude": 100.19458333333333
+  },
+  "alarm_state": "01",
+  "battery_level": "015",
+  "payload": {
+    "identifier": "IW",
+    "commandWord": "AP10",
+    "date": "2007-08-23",
+    "dataValidity": "A",
+    "lbsData": "1644.3881N10011.6750E005.2",
+    "gmtTime": "052710",
+    "directionAngle": "206.81",
+    "gsmSignal": "060",
+    "satellites": "012",
+    "batteryLevel": "015",
+    "remainingSpace": "0",
+    "fortificationState": "00",
+    "workingMode": "11",
+    "lbsBaseData": {
+      "mcc": "520",
+      "mnc": "4",
+      "lac": "4239",
+      "cid": "16784027"
+    },
+    "alarmState": "01",
+    "deviceLanguage": "zh-cn",
+    "replyAddress": "0",
+    "mobileHyperlink": "0",
+    "wifiInformation": [
+      {"ssid": "a", "macAddress": "02-15-bc-24-d6-57", "signalStrength": "78"},
+      {"ssid": "a", "macAddress": "88-d7-f6-87-88-60", "signalStrength": "76"}
+    ]
+  },
+  "metadata": null,
+  "smart_watch_id": 1,
+  "imei": "865513041161826"
+}
+```
+
+```javascript
+socket.on('feed/alarm', (data) => {
+  // Handle alarm/emergency data
+});
+```
+
+#### Event: `feed/alarm/{imei}`
+
+Receive alarm or emergency data from a specific watch identified by its IMEI.
+
+Example response:
+```json
+{
+  "datetime": "2023-08-07T05:27:29.896Z",
+  "location": {
+    "latitude": 16.739801666666665,
+    "longitude": 100.19458333333333
+  },
+  "alarm_state": "01",
+  "battery_level": "015",
+  "payload": {
+    "identifier": "IW",
+    "commandWord": "AP10",
+    "date": "2007-08-23",
+    "dataValidity": "A",
+    "lbsData": "1644.3881N10011.6750E005.2",
+    "gmtTime": "052710",
+    "directionAngle": "206.81",
+    "gsmSignal": "060",
+    "satellites": "012",
+    "batteryLevel": "015",
+    "remainingSpace": "0",
+    "fortificationState": "00",
+    "workingMode": "11",
+    "lbsBaseData": {
+      "mcc": "520",
+      "mnc": "4",
+      "lac": "4239",
+      "cid": "16784027"
+    },
+    "alarmState": "01",
+    "deviceLanguage": "zh-cn",
+    "replyAddress": "0",
+    "mobileHyperlink": "0",
+    "wifiInformation": [
+      {"ssid": "a", "macAddress": "02-15-bc-24-d6-57", "signalStrength": "78"},
+      {"ssid": "a", "macAddress": "88-d7-f6-87-88-60", "signalStrength": "76"}
+    ]
+  },
+  "metadata": null,
+  "smart_watch_id": 1,
+  "imei": "865513041161826"
+}
+```
+
+```javascript
+socket.on('feed/alarm/{imei}', (data) => {
+  // Handle alarm/emergency data for the specified IMEI
+});
+```
+
+### Disconnect from Server
+
+To disconnect from the Socket.IO server, use the following code:
+
+```javascript
+socket.disconnect();
+```
+
+Remember to replace `'server_url'` with the actual URL of your Socket.IO server.
 
 
 ## License
