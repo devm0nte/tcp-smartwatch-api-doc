@@ -925,6 +925,62 @@ Body:
 
 ---
 
+## Watch SOS NUMBER SET Command API
+
+This API allows you to send a command to a smartwatch to set the sos number (upto 3 numbers). 
+
+### API Endpoint
+
+#### Send Heart Rate Check Command
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/sos-number
+```
+
+### Request Body
+
+The request body should be in JSON format and should contain the following field:
+
+- `imei_number` (string): The IMEI (International Mobile Equipment Identity) number of the smartwatch.
+- `phone1` (string): The phone number of the first SOS number. (in form `XXXXXXXXXX` )
+- `phone2` (string): The phone number of the first SOS number. (in form `XXXXXXXXXX` )
+- `phone3` (string): The phone number of the first SOS number. (in form `XXXXXXXXXX` )
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "created".
+- `status` (integer): The HTTP status code of the response. Possible values: 201.
+- `message` (string): A message describing the response.
+
+### Example Request
+
+#### Send Set SOS Number Command
+
+```
+POST https://api-watch.adcm.co.th/v1/command/watch/sos-number
+
+Body:
+{
+  "imei_number": "865513041161826",
+  "phone1": "0897654321",
+  "phone2": "0999999999"
+}
+```
+
+### Example Response
+
+```json
+{
+  "type": "created",
+  "status": 201,
+  "message": "Sent Command to set sos number : 865513041161826"
+}
+```
+
+---
+
 ## Socket.IO Client API Documentation
 
 The Socket.IO client provides real-time communication with the server using various events. You can use these events to receive different types of data from watches.
