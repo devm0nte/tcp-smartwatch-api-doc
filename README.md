@@ -65,38 +65,48 @@ Table of Contents:
       - [Get All Emergency Logs](#get-all-emergency-logs-1)
       - [Get Emergency Logs by IMEI](#get-emergency-logs-by-imei-1)
     - [Example Response](#example-response-5)
-  - [Watch Interval Command API](#watch-interval-command-api)
+  - [Tracking Log API](#tracking-log-api)
     - [API Endpoint](#api-endpoint-6)
+      - [Get Tracking Logs by IMEI](#get-tracking-logs-by-imei)
+    - [Query Parameters](#query-parameters-2)
+    - [Response](#response-6)
+      - [Tracking Log Fields](#tracking-log-fields)
+        - [Payload Fields](#payload-fields-1)
+    - [Example Requests](#example-requests-1)
+      - [Get Tracking Logs by IMEI](#get-tracking-logs-by-imei-1)
+    - [Example Response](#example-response-6)
+  - [Watch Interval Command API](#watch-interval-command-api)
+    - [API Endpoint](#api-endpoint-7)
       - [Set Interval for Health Data Collection](#set-interval-for-health-data-collection)
     - [Request Body](#request-body)
-    - [Response](#response-6)
+    - [Response](#response-7)
     - [Example Request](#example-request-5)
       - [Set Interval for Health Data Collection](#set-interval-for-health-data-collection-1)
-    - [Example Response](#example-response-6)
+    - [Example Response](#example-response-7)
   - [Watch Temperature Command API](#watch-temperature-command-api)
-    - [API Endpoint](#api-endpoint-7)
+    - [API Endpoint](#api-endpoint-8)
       - [Send Temperature Check Command](#send-temperature-check-command)
     - [Request Body](#request-body-1)
-    - [Response](#response-7)
+    - [Response](#response-8)
     - [Example Request](#example-request-6)
       - [Send Temperature Check Command](#send-temperature-check-command-1)
-    - [Example Response](#example-response-7)
+    - [Example Response](#example-response-8)
   - [Watch Heart Rate Command API](#watch-heart-rate-command-api)
-    - [API Endpoint](#api-endpoint-8)
+    - [API Endpoint](#api-endpoint-9)
       - [Send Heart Rate Check Command](#send-heart-rate-check-command)
     - [Request Body](#request-body-2)
-    - [Response](#response-8)
+    - [Response](#response-9)
     - [Example Request](#example-request-7)
       - [Send Heart Rate Check Command](#send-heart-rate-check-command-1)
-    - [Example Response](#example-response-8)
+    - [Example Response](#example-response-9)
   - [Watch SOS NUMBER SET Command API](#watch-sos-number-set-command-api)
-    - [API Endpoint](#api-endpoint-9)
+    - [API Endpoint](#api-endpoint-10)
       - [Send Heart Rate Check Command](#send-heart-rate-check-command-2)
     - [Request Body](#request-body-3)
-    - [Response](#response-9)
+    - [Response](#response-10)
     - [Example Request](#example-request-8)
       - [Send Set SOS Number Command](#send-set-sos-number-command)
-    - [Example Response](#example-response-9)
+    - [Example Response](#example-response-10)
   - [Socket.IO Client API Documentation](#socketio-client-api-documentation)
     - [Connect to Server](#connect-to-server)
     - [Events and Data Formats](#events-and-data-formats)
@@ -652,7 +662,7 @@ Each emergency log object in the `data` array contains the following fields:
 - `datetime` (string): The timestamp of the emergency log.
 - `smart_watch_id` (integer): The ID of the associated smartwatch.
 - `location` (object): The location information. It may be null if the location is unavailable.
-- `alarm_state` (string): The state of the alarm.- `alarm_state` [00: no alarm, 01：SOS, 03: not wear, 05/06：fall down alarm]
+- `alarm_state` (string): The state of the alarm. [00: no alarm, 01：SOS, 03: not wear, 05/06：fall down alarm]
 - `battery_level` (string): The battery level.
 - `payload` (object): Additional payload data.
 - `metadata` (object): Additional metadata. It may be null.
@@ -772,6 +782,110 @@ GET https://api-watch.adcm.co.th/v1/emergency?imei={imei}
       },
       "metadata": null
     }
+  ]
+}
+```
+
+---
+
+
+## Tracking Log API
+
+This API provides access to tracking position log data.
+
+### API Endpoint
+
+#### Get Tracking Logs by IMEI
+
+This endpoint access to all position data. query by imei number
+
+```
+GET https://api-watch.adcm.co.th/v1/track/imei/{imei}
+```
+
+### Query Parameters
+
+- `imei` (string): The IMEI (International Mobile Equipment Identity) number of the smartwatch. (Optional)
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "success".
+- `status` (integer): The HTTP status code of the response. Possible values: 200.
+- `message` (string): A message describing the response.
+- `pagination` (object): Pagination information.
+  - `all_rows` (integer): The total number of emergency logs.
+  - `all_pages` (integer): The total number of pages.
+  - `page_limit` (integer): The maximum number of logs per page.
+  - `page_number` (integer): The current page number.
+- `length` (integer): The number of emergency logs in the current response.
+- `data` (array): An array containing the emergency log records.
+
+#### Tracking Log Fields
+
+Each tracking log object in the `data` array contains the following fields:
+
+- `id` (integer): The ID of the tracking log.
+- `datetime` (string): The timestamp of the tracking log.
+- `smart_watch_id` (integer): The ID of the associated smartwatch.
+- `location` (object): The location information. It may be null if the location is unavailable.
+
+##### Payload Fields
+
+The `payload` object contains various fields specific to the emergency log. The structure and fields may vary depending on the log's data.
+
+### Example Requests
+
+#### Get Tracking Logs by IMEI
+
+```
+GET https://api-watch.adcm.co.th/v1/track/imei/865513041164663
+```
+
+### Example Response
+
+```json
+{
+  "type": "success",
+  "status": 200,
+  "message": "All Tracking log list",
+  "pagination": {
+    "all_rows": 1486,
+    "all_pages": 149,
+    "page_limit": 10,
+    "page_number": 1
+  },
+  "length": 10,
+  "data": [
+    {
+      "id": 11885,
+      "datetime": "2023-08-14 23:35:21",
+      "smart_watch_id": 2,
+      "location": {
+        "latitude": 16.980625333333332,
+        "longitude": 99.9490485
+      }
+    },
+    {
+      "id": 11883,
+      "datetime": "2023-08-14 23:34:21",
+      "smart_watch_id": 2,
+      "location": {
+        "latitude": 16.980666166666666,
+        "longitude": 99.94905483333334
+      }
+    },
+    {
+      "id": 11881,
+      "datetime": "2023-08-14 23:33:21",
+      "smart_watch_id": 2,
+      "location": {
+        "latitude": 16.980635666666668,
+        "longitude": 99.94905833333334
+      }
+    },
+...............................................
   ]
 }
 ```
@@ -1232,7 +1346,9 @@ Example response:
     "deviceLanguage": "zh-cn",
     "replyAddress": "0",
     "mobileHyperlink": "0",
-    "wifiInformation": [
+    "
+
+wifiInformation": [
       {"ssid": "a", "macAddress": "02-15-bc-24-d6-57", "signalStrength": "78"},
       {"ssid": "a", "macAddress": "88-d7-f6-87-88-60", "signalStrength": "76"}
     ]
