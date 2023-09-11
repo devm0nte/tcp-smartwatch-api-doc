@@ -75,38 +75,51 @@ Table of Contents:
     - [Example Requests](#example-requests-1)
       - [Get Tracking Logs by IMEI](#get-tracking-logs-by-imei-1)
     - [Example Response](#example-response-6)
-  - [Watch Interval Command API](#watch-interval-command-api)
+  - [Wearer List API](#wearer-list-api)
     - [API Endpoint](#api-endpoint-7)
+    - [Response](#response-7)
+      - [Wearer Fields](#wearer-fields)
+    - [Example Request](#example-request-5)
+    - [Example Response](#example-response-7)
+  - [Smart Wearer Details API](#smart-wearer-details-api)
+    - [API Endpoint](#api-endpoint-8)
+    - [Parameters](#parameters-1)
+    - [Response](#response-8)
+      - [Data Fields](#data-fields-1)
+    - [Example Request](#example-request-6)
+    - [Example Response](#example-response-8)
+  - [Watch Interval Command API](#watch-interval-command-api)
+    - [API Endpoint](#api-endpoint-9)
       - [Set Interval for Health Data Collection](#set-interval-for-health-data-collection)
     - [Request Body](#request-body)
-    - [Response](#response-7)
-    - [Example Request](#example-request-5)
-      - [Set Interval for Health Data Collection](#set-interval-for-health-data-collection-1)
-    - [Example Response](#example-response-7)
-  - [Watch Temperature Command API](#watch-temperature-command-api)
-    - [API Endpoint](#api-endpoint-8)
-      - [Send Temperature Check Command](#send-temperature-check-command)
-    - [Request Body](#request-body-1)
-    - [Response](#response-8)
-    - [Example Request](#example-request-6)
-      - [Send Temperature Check Command](#send-temperature-check-command-1)
-    - [Example Response](#example-response-8)
-  - [Watch Heart Rate Command API](#watch-heart-rate-command-api)
-    - [API Endpoint](#api-endpoint-9)
-      - [Send Heart Rate Check Command](#send-heart-rate-check-command)
-    - [Request Body](#request-body-2)
     - [Response](#response-9)
     - [Example Request](#example-request-7)
-      - [Send Heart Rate Check Command](#send-heart-rate-check-command-1)
+      - [Set Interval for Health Data Collection](#set-interval-for-health-data-collection-1)
     - [Example Response](#example-response-9)
-  - [Watch SOS NUMBER SET Command API](#watch-sos-number-set-command-api)
+  - [Watch Temperature Command API](#watch-temperature-command-api)
     - [API Endpoint](#api-endpoint-10)
-      - [Send Heart Rate Check Command](#send-heart-rate-check-command-2)
-    - [Request Body](#request-body-3)
+      - [Send Temperature Check Command](#send-temperature-check-command)
+    - [Request Body](#request-body-1)
     - [Response](#response-10)
     - [Example Request](#example-request-8)
-      - [Send Set SOS Number Command](#send-set-sos-number-command)
+      - [Send Temperature Check Command](#send-temperature-check-command-1)
     - [Example Response](#example-response-10)
+  - [Watch Heart Rate Command API](#watch-heart-rate-command-api)
+    - [API Endpoint](#api-endpoint-11)
+      - [Send Heart Rate Check Command](#send-heart-rate-check-command)
+    - [Request Body](#request-body-2)
+    - [Response](#response-11)
+    - [Example Request](#example-request-9)
+      - [Send Heart Rate Check Command](#send-heart-rate-check-command-1)
+    - [Example Response](#example-response-11)
+  - [Watch SOS NUMBER SET Command API](#watch-sos-number-set-command-api)
+    - [API Endpoint](#api-endpoint-12)
+      - [Send Heart Rate Check Command](#send-heart-rate-check-command-2)
+    - [Request Body](#request-body-3)
+    - [Response](#response-12)
+    - [Example Request](#example-request-10)
+      - [Send Set SOS Number Command](#send-set-sos-number-command)
+    - [Example Response](#example-response-12)
   - [Socket.IO Client API Documentation](#socketio-client-api-documentation)
     - [Connect to Server](#connect-to-server)
     - [Events and Data Formats](#events-and-data-formats)
@@ -121,6 +134,7 @@ Table of Contents:
   - [License](#license)
 
 ---
+
 
 ## Watch List API
 
@@ -891,6 +905,199 @@ GET https://api-watch.adcm.co.th/v1/track/imei/865513041164663
 ```
 
 ---
+
+## Wearer List API
+
+This API provides a list of wearers.
+
+### API Endpoint
+
+```
+GET https://api-watch.adcm.co.th/v1/wearer/
+```
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "success".
+- `status` (integer): The HTTP status code of the response. Possible values: 200.
+- `message` (string): A message describing the response.
+- `pagination` (object): Pagination details for the wearer list.
+  - `all_rows` (integer): The total number of rows in the wearer list.
+  - `all_pages` (integer): The total number of pages in the wearer list.
+  - `page_limit` (integer): The maximum number of wearers per page.
+  - `page_number` (integer): The current page number.
+- `length` (integer): The number of wearers in the current response.
+- `data` (array): An array containing the wearers details.
+
+#### Wearer Fields
+
+Each wearer object in the `data` array contains the following fields:
+
+- `id` (integer): The unique identifier of the wearer.
+- `name` (string): The name of the wearer.
+- `phone` (string): The phone number of the wearer.
+- `address` (string): The address of the wearer.
+- `picture` (string): The picture url of the wearer.
+- `smart_watch_id` (number): The ID of the smart watch associated with the wearer.
+- `smart_watch` (object): The detail of smart watch
+  - `id` (integer): The unique identifier of the watch.
+  - `imei` (string): The IMEI (International Mobile Equipment Identity) number of the watch.
+  - `model` (string): The model of the watch.
+  - `type` (string): The type of the watch.
+  - `status` (string): The current status of the watch.
+  - `location` (object): The location coordinates of the watch. It may be null if the location is unavailable.
+    - `latitude` (float): The latitude coordinate of the watch.
+    - `longitude` (float): The longitude coordinate of the watch.
+
+### Example Request
+
+```
+GET https://api-watch.adcm.co.th/v1/wearer/
+```
+
+### Example Response
+
+```json
+{
+    "type": "success",
+    "status": 200,
+    "message": "Wearer list",
+    "pagination": {
+        "all_rows": 2,
+        "all_pages": 1,
+        "page_limit": 10,
+        "page_number": 1
+    },
+    "length": 2,
+    "data": [
+        {
+            "id": 1,
+            "name": "Pacharaphon",
+            "phone": "0877374228",
+            "address": "40 หมู่ 3 บ้านไร่ บางกระทุ่ม พิษณุโลก",
+            "picture": null,
+            "smart_watch_id": 1,
+            "smart_watch": {
+                "id": 1,
+                "imei": "865513041161826",
+                "model": "LP19",
+                "type": "test",
+                "status": "online",
+                "location": {
+                    "latitude": 13.758701666666667,
+                    "longitude": 100.56674166666667
+                }
+            }
+        },
+        {
+            "id": 2,
+            "name": "Ananda",
+            "phone": "0987654321",
+            "address": "หอพักแห่งหนึ่ง",
+            "picture": null,
+            "smart_watch_id": 2,
+            "smart_watch": {
+                "id": 2,
+                "imei": "865513041164663",
+                "model": "LP18",
+                "type": "test2",
+                "status": "online",
+                "location": {
+                    "latitude": 16.980625333333332,
+                    "longitude": 99.9490485
+                }
+            }
+        }
+    ]
+}
+```
+
+---
+
+## Smart Wearer Details API
+
+This API provides information about a smart wearer using its IMEI (International Mobile Equipment Identity) number.
+
+### API Endpoint
+
+```
+GET https://api-watch.adcm.co.th/v1/wearer/imei/{imei}
+```
+
+### Parameters
+
+| Parameter | Description                              |
+|-----------|------------------------------------------|
+| imei      | The IMEI (International Mobile Equipment Identity) number of the smart watch. |
+
+### Response
+
+The API response will be in JSON format and will contain the following fields:
+
+- `type` (string): The response type. Possible values: "success".
+- `status` (integer): The HTTP status code of the response. Possible values: 200.
+- `message` (string): A message describing the response.
+- `data` (object): The data object containing the details of the smart wearer.
+
+#### Data Fields
+
+The `data` object contains the following fields:
+
+- `id` (integer): The unique identifier of the wearer.
+- `name` (string): The name of the wearer.
+- `phone` (string): The phone number of the wearer.
+- `address` (string): The address of the wearer.
+- `picture` (string): The picture url of the wearer.
+- `smart_watch_id` (number): The ID of the smart watch associated with the wearer.
+- `smart_watch` (object): The detail of smart watch
+  - `id` (integer): The unique identifier of the watch.
+  - `imei` (string): The IMEI (International Mobile Equipment Identity) number of the watch.
+  - `model` (string): The model of the watch.
+  - `type` (string): The type of the watch.
+  - `status` (string): The current status of the watch.
+  - `location` (object): The location coordinates of the watch. It may be null if the location is unavailable.
+    - `latitude` (float): The latitude coordinate of the watch.
+    - `longitude` (float): The longitude coordinate of the watch.
+
+### Example Request
+
+```
+GET https://api-watch.adcm.co.th/v1/wearer/imei/865513041164663
+```
+
+### Example Response
+
+```json
+{
+    "type": "success",
+    "status": 200,
+    "message": "wearer details by imei : 865513041164663",
+    "data": {
+        "id": 2,
+        "name": "Ananda",
+        "phone": "0987654321",
+        "address": "หอพักแห่งหนึ่ง",
+        "picture": null,
+        "smart_watch_id": 2,
+        "smart_watch": {
+            "id": 2,
+            "imei": "865513041164663",
+            "model": "LP18",
+            "type": "test2",
+            "status": "online",
+            "location": {
+                "latitude": 16.980625333333332,
+                "longitude": 99.9490485
+            }
+        }
+    }
+}
+```
+
+---
+
 
 ## Watch Interval Command API
 
